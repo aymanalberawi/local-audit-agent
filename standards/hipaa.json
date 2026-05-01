@@ -1,0 +1,114 @@
+{
+  "standard": "HIPAA",
+  "full_name": "Health Insurance Portability and Accountability Act — Security Rule (45 CFR §164.312)",
+  "version": "1996 (Updated 2024 HIPAA Security Rule NPRM)",
+  "region": "US",
+  "authority": "U.S. Department of Health and Human Services (HHS) / OCR",
+  "controls": [
+    {
+      "id": "HIPAA-AC-01",
+      "domain": "Access Controls (§164.312(a)(1))",
+      "requirement": "Unique User Identification",
+      "description": "Every user accessing systems containing ePHI must be assigned a unique name or number for identification and tracking.",
+      "logic": "FAIL if any user account accessing ePHI systems is a shared_account = TRUE, or if user_id is NULL or generic (e.g., 'admin', 'user', 'test')."
+    },
+    {
+      "id": "HIPAA-AC-02",
+      "domain": "Access Controls (§164.312(a)(1))",
+      "requirement": "Emergency Access Procedure",
+      "description": "Procedures must exist for obtaining necessary ePHI during emergency situations.",
+      "logic": "FAIL if no emergency_access_procedure document exists, or if emergency_access_log is not maintained, or if emergency_access has no post-use review."
+    },
+    {
+      "id": "HIPAA-AC-03",
+      "domain": "Access Controls (§164.312(a)(1))",
+      "requirement": "Automatic Logoff",
+      "description": "Electronic sessions must automatically terminate after a defined period of inactivity.",
+      "logic": "FAIL if any ePHI system has session_timeout_minutes = NULL or session_timeout_minutes > 15, or if automatic_logoff_enabled = FALSE."
+    },
+    {
+      "id": "HIPAA-AC-04",
+      "domain": "Access Controls (§164.312(a)(1))",
+      "requirement": "Encryption and Decryption of ePHI",
+      "description": "A mechanism to encrypt and decrypt ePHI must be implemented where appropriate based on risk analysis.",
+      "logic": "FAIL if any ePHI record has encryption_at_rest = FALSE without documented risk_analysis_justification, or if encryption_method is deprecated (DES, RC4)."
+    },
+    {
+      "id": "HIPAA-AUDIT-01",
+      "domain": "Audit Controls (§164.312(b))",
+      "requirement": "Audit Logs Enabled on All ePHI Systems",
+      "description": "Hardware, software, and procedural mechanisms must record and examine activity in systems containing ePHI.",
+      "logic": "FAIL if any system storing or accessing ePHI has audit_logging_enabled = FALSE, or if audit_logs are not retained for the required period (minimum 6 years)."
+    },
+    {
+      "id": "HIPAA-AUDIT-02",
+      "domain": "Audit Controls (§164.312(b))",
+      "requirement": "Audit Logs Regularly Reviewed",
+      "description": "Audit logs must be regularly reviewed for unauthorized access or anomalous activity involving ePHI.",
+      "logic": "FAIL if log_review_last_date for any ePHI system is older than 7 days, or if no log_review_record exists for the current month."
+    },
+    {
+      "id": "HIPAA-INT-01",
+      "domain": "Integrity Controls (§164.312(c)(1))",
+      "requirement": "ePHI Not Improperly Altered or Destroyed",
+      "description": "Policies and procedures must protect ePHI from improper alteration or destruction.",
+      "logic": "FAIL if any ePHI record has no data_integrity_hash or if hash_verification_date is older than 30 days, or if modification_audit_trail_enabled = FALSE."
+    },
+    {
+      "id": "HIPAA-AUTH-01",
+      "domain": "Person or Entity Authentication (§164.312(d))",
+      "requirement": "Authentication Verified Before ePHI Access",
+      "description": "Procedures must verify that a person or entity seeking access to ePHI is who they claim to be.",
+      "logic": "FAIL if any user accessing ePHI uses single-factor authentication only (password alone) without documented justification, or if authentication_method = 'NONE'."
+    },
+    {
+      "id": "HIPAA-TX-01",
+      "domain": "Transmission Security (§164.312(e)(1))",
+      "requirement": "ePHI Encrypted During Transmission",
+      "description": "Technical security measures must guard against unauthorized access to ePHI transmitted over electronic networks.",
+      "logic": "FAIL if any ePHI transmission uses unencrypted channels (HTTP, FTP, SMTP without TLS), or if tls_version < 1.2."
+    },
+    {
+      "id": "HIPAA-RA-01",
+      "domain": "Risk Analysis (§164.308(a)(1))",
+      "requirement": "Formal Risk Analysis Conducted",
+      "description": "A comprehensive risk analysis of all potential risks and vulnerabilities to ePHI must be conducted.",
+      "logic": "FAIL if no risk_analysis record exists, or if risk_analysis_date is older than 12 months, or if analysis_scope excludes any ePHI system."
+    },
+    {
+      "id": "HIPAA-RM-01",
+      "domain": "Risk Management (§164.308(a)(1))",
+      "requirement": "Risk Management Plan Implemented",
+      "description": "Security measures must be implemented to reduce identified risks to ePHI to reasonable and appropriate levels.",
+      "logic": "FAIL if any identified risk with rating IN ('HIGH','CRITICAL') has no risk_treatment record, or if treatment_status = 'OPEN' and target_date is past."
+    },
+    {
+      "id": "HIPAA-TRAIN-01",
+      "domain": "Workforce Training (§164.308(a)(5))",
+      "requirement": "Security Awareness Training Provided to All Workforce",
+      "description": "All workforce members must receive training on security awareness and HIPAA obligations.",
+      "logic": "FAIL if any active employee with ePHI access has hipaa_training_completed = FALSE or training_completion_date older than 12 months."
+    },
+    {
+      "id": "HIPAA-SANC-01",
+      "domain": "Sanctions Policy (§164.308(a)(1))",
+      "requirement": "Sanctions Applied to Policy Violations",
+      "description": "Appropriate sanctions must be applied to workforce members who fail to comply with security policies.",
+      "logic": "FAIL if any security_violation record with confirmed_breach = TRUE has sanction_applied = FALSE or sanction_record_id = NULL."
+    },
+    {
+      "id": "HIPAA-DR-01",
+      "domain": "Contingency Plan (§164.308(a)(7))",
+      "requirement": "Disaster Recovery Plan Tested",
+      "description": "A disaster recovery plan must be in place, documented, and tested to restore ePHI access after an emergency.",
+      "logic": "FAIL if no disaster_recovery_plan exists, or if drp_last_tested_date is older than 12 months, or if drp_test_result = 'FAILED'."
+    },
+    {
+      "id": "HIPAA-BAA-01",
+      "domain": "Business Associate Agreements (§164.308(b))",
+      "requirement": "Business Associate Agreements in Place",
+      "description": "All Business Associates with access to ePHI must sign a Business Associate Agreement (BAA) before accessing data.",
+      "logic": "FAIL if any vendor or partner with ephi_access = TRUE has no executed BAA, or if BAA_expiry_date is past, or if BAA_last_reviewed is older than 12 months."
+    }
+  ]
+}

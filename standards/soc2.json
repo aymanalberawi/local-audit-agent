@@ -1,0 +1,135 @@
+{
+  "standard": "SOC2",
+  "full_name": "AICPA SOC 2 — Service Organization Control (Trust Services Criteria)",
+  "version": "2017 (updated 2022)",
+  "region": "US",
+  "authority": "American Institute of Certified Public Accountants (AICPA)",
+  "controls": [
+    {
+      "id": "SOC2-CC1-01",
+      "domain": "CC1: Control Environment",
+      "requirement": "Commitment to Integrity and Ethical Values",
+      "description": "Management demonstrates commitment to integrity and ethical values through policies, standards of conduct, and organizational actions.",
+      "logic": "FAIL if no code_of_conduct document exists with employee_acknowledgement, or if acknowledgement_rate < 95%, or if conduct_violations exist with no documented investigation."
+    },
+    {
+      "id": "SOC2-CC1-02",
+      "domain": "CC1: Control Environment",
+      "requirement": "Board Independence and Oversight",
+      "description": "The board demonstrates independence from management and exercises oversight of internal controls.",
+      "logic": "FAIL if audit_committee_meetings in the last 12 months < 4, or if no independent board members are registered in the governance records."
+    },
+    {
+      "id": "SOC2-CC2-01",
+      "domain": "CC2: Information and Communication",
+      "requirement": "Internal Communication of Security Policies",
+      "description": "Security policies and procedures must be communicated internally so that personnel understand their responsibilities.",
+      "logic": "FAIL if any active employee has policy_acknowledgement_status = 'PENDING' or policy_acknowledged_date older than 12 months."
+    },
+    {
+      "id": "SOC2-CC3-01",
+      "domain": "CC3: Risk Assessment",
+      "requirement": "Formal Risk Assessment Process",
+      "description": "A formal risk assessment process must be conducted at least annually to identify and evaluate risks to achieving service commitments.",
+      "logic": "FAIL if no risk_assessment record exists with completion_date in the last 12 months, or if assessment_scope excludes critical systems."
+    },
+    {
+      "id": "SOC2-CC4-01",
+      "domain": "CC4: Monitoring Activities",
+      "requirement": "Ongoing Monitoring of Internal Controls",
+      "description": "The organization performs ongoing evaluations to ascertain whether controls are present and functioning.",
+      "logic": "FAIL if no control_monitoring record exists for the current quarter, or if monitoring_deficiencies exist with no remediation_plan."
+    },
+    {
+      "id": "SOC2-CC5-01",
+      "domain": "CC5: Control Activities",
+      "requirement": "Policies and Procedures to Mitigate Risk",
+      "description": "The organization selects and develops control activities to mitigate risks including segregation of duties.",
+      "logic": "FAIL if any user has conflicting duties: both initiate_payment AND approve_payment permissions in the same system."
+    },
+    {
+      "id": "SOC2-CC6-01",
+      "domain": "CC6: Logical and Physical Access Controls",
+      "requirement": "Logical Access Restricted to Authorized Users",
+      "description": "Logical access to systems and data must be restricted to authorized individuals based on least privilege.",
+      "logic": "FAIL if any user account has access_level exceeding role_definition, or if access_request_approval is NULL for active access grants."
+    },
+    {
+      "id": "SOC2-CC6-02",
+      "domain": "CC6: Logical and Physical Access Controls",
+      "requirement": "Authentication Mechanisms — MFA Required",
+      "description": "Multi-factor authentication must be required for access to production systems and remote access.",
+      "logic": "FAIL if any user with access to production_system = TRUE or remote_access = TRUE has mfa_enabled = FALSE."
+    },
+    {
+      "id": "SOC2-CC6-03",
+      "domain": "CC6: Logical and Physical Access Controls",
+      "requirement": "Access Removal Upon Termination or Role Change",
+      "description": "Access rights must be revoked or modified within 24 hours of termination or material role change.",
+      "logic": "FAIL if any terminated_user record has account_status = 'ACTIVE' after termination_date, or if access_revocation_date - termination_date > 1."
+    },
+    {
+      "id": "SOC2-CC6-04",
+      "domain": "CC6: Logical and Physical Access Controls",
+      "requirement": "Access Reviews Conducted Periodically",
+      "description": "Periodic user access reviews must be conducted to ensure access rights remain appropriate.",
+      "logic": "FAIL if any user account has last_access_review_date older than 90 days for privileged users or 6 months for standard users."
+    },
+    {
+      "id": "SOC2-CC6-05",
+      "domain": "CC6: Logical and Physical Access Controls",
+      "requirement": "Encryption of Data at Rest and in Transit",
+      "description": "Sensitive data must be encrypted at rest and during transmission.",
+      "logic": "FAIL if any customer_data or service_data record has encryption_at_rest = FALSE, or if any API endpoint transmitting sensitive data has tls_enabled = FALSE."
+    },
+    {
+      "id": "SOC2-CC7-01",
+      "domain": "CC7: System Operations",
+      "requirement": "System Monitoring for Anomalous Activity",
+      "description": "The organization monitors system components to detect anomalies and unauthorized activities.",
+      "logic": "FAIL if monitoring_enabled = FALSE for any critical system, or if no security_alert was reviewed in the last 24 hours."
+    },
+    {
+      "id": "SOC2-CC7-02",
+      "domain": "CC7: System Operations",
+      "requirement": "Incident Response Procedures Executed",
+      "description": "Security incidents must be identified, responded to, and recovered from according to defined procedures.",
+      "logic": "FAIL if any security_incident record has no incident_response_plan_applied, or if incident_status = 'OPEN' for incidents older than 30 days without documented justification."
+    },
+    {
+      "id": "SOC2-CC7-03",
+      "domain": "CC7: System Operations",
+      "requirement": "Backup and Recovery Procedures Tested",
+      "description": "Data backup and recovery procedures must be in place, documented, and tested periodically.",
+      "logic": "FAIL if backup_test_date is older than 6 months, or if backup_test_result = 'FAILED', or if no backup_procedure_documentation exists."
+    },
+    {
+      "id": "SOC2-CC8-01",
+      "domain": "CC8: Change Management",
+      "requirement": "Formal Change Management Process",
+      "description": "System changes must follow a defined process including authorization, testing, and documentation prior to deployment.",
+      "logic": "FAIL if any deployment record has no change_request_id, or if change_request_approval_status != 'APPROVED', or if pre_deployment_testing_completed = FALSE."
+    },
+    {
+      "id": "SOC2-CC9-01",
+      "domain": "CC9: Risk Mitigation",
+      "requirement": "Vendor and Third-Party Risk Management",
+      "description": "The organization identifies and manages risks from third-party vendors to protect service commitments.",
+      "logic": "FAIL if any critical vendor has no risk_assessment on file, or if vendor_contract lacks security_requirements clauses, or if last_vendor_review_date is older than 12 months."
+    },
+    {
+      "id": "SOC2-A1-01",
+      "domain": "Availability",
+      "requirement": "System Availability Meets Committed Levels",
+      "description": "The system must be available for operation and use as committed in service level agreements.",
+      "logic": "FAIL if system uptime percentage in the last 30 days is less than sla_uptime_commitment, or if sla_breach_count > 0 without documented remediation."
+    },
+    {
+      "id": "SOC2-C1-01",
+      "domain": "Confidentiality",
+      "requirement": "Confidential Information Protected",
+      "description": "Information designated as confidential must be protected through the entire data lifecycle including disposal.",
+      "logic": "FAIL if any record with data_classification = 'CONFIDENTIAL' has been shared with parties not listed in authorized_recipients, or if disposal_method = 'UNSECURED'."
+    }
+  ]
+}

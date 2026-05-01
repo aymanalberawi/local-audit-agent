@@ -1,0 +1,121 @@
+{
+  "standard": "UAE-PDPL",
+  "full_name": "UAE Personal Data Protection Law (Federal Decree-Law No. 45 of 2021)",
+  "version": "2022",
+  "region": "GCC",
+  "authority": "UAE Data Office",
+  "controls": [
+    {
+      "id": "PDPL-GOV-01",
+      "domain": "Governance & Accountability",
+      "requirement": "Record of Processing Activities (ROPA)",
+      "description": "Organization must maintain a comprehensive record of all personal data processing activities including categories of data, purposes, retention periods, and recipients.",
+      "logic": "FAIL if no ROPA table or equivalent log exists, or if processing_purpose, data_category, or retention_period fields are NULL or empty for any active processing record."
+    },
+    {
+      "id": "PDPL-GOV-02",
+      "domain": "Governance & Accountability",
+      "requirement": "Data Protection Officer Appointment",
+      "description": "Organizations engaging in high-risk or large-scale processing must appoint a Data Protection Officer (DPO).",
+      "logic": "FAIL if the organization processes sensitive personal data at scale and no DPO role is registered in the HR or roles system."
+    },
+    {
+      "id": "PDPL-GOV-03",
+      "domain": "Governance & Accountability",
+      "requirement": "Privacy Policy Publication",
+      "description": "A clear, accessible privacy policy must exist documenting data collection practices, purposes, data subject rights, and security measures.",
+      "logic": "FAIL if no privacy_policy record exists, or if the policy has not been reviewed/updated within the last 12 months."
+    },
+    {
+      "id": "PDPL-CONSENT-01",
+      "domain": "Lawful Processing & Consent",
+      "requirement": "Lawful Basis Documented for Each Processing Activity",
+      "description": "Every personal data processing activity must be grounded in a documented legal basis: consent, contractual necessity, legal obligation, vital interests, or legitimate interests.",
+      "logic": "FAIL if any processing record has a NULL or blank legal_basis field."
+    },
+    {
+      "id": "PDPL-CONSENT-02",
+      "domain": "Lawful Processing & Consent",
+      "requirement": "Consent Freely Given and Withdrawable",
+      "description": "Where consent is the lawful basis, it must be freely given, specific, informed, and unambiguous. Users must be able to withdraw consent at any time.",
+      "logic": "FAIL if consent records lack a timestamp, if consent_withdrawn flag is missing, or if consent was bundled with other terms without a separate explicit opt-in."
+    },
+    {
+      "id": "PDPL-RIGHTS-01",
+      "domain": "Data Subject Rights",
+      "requirement": "Right of Access Fulfilled Within Timeframe",
+      "description": "Organizations must respond to data subject access requests (DSARs) within the legally required timeframe.",
+      "logic": "FAIL if any DSAR record has a response_date that is more than 30 days after the request_date, or if response_date is NULL for requests older than 30 days."
+    },
+    {
+      "id": "PDPL-RIGHTS-02",
+      "domain": "Data Subject Rights",
+      "requirement": "Right to Erasure Implemented",
+      "description": "When a data subject requests erasure and the data is no longer needed or consent is withdrawn, the data must be deleted.",
+      "logic": "FAIL if erasure_request records exist with status NOT IN ('COMPLETED', 'REJECTED_WITH_REASON') after 30 days of request."
+    },
+    {
+      "id": "PDPL-RIGHTS-03",
+      "domain": "Data Subject Rights",
+      "requirement": "Data Portability Supported",
+      "description": "Personal data must be provided in a structured, machine-readable format upon request.",
+      "logic": "FAIL if portability_request records exist with no fulfillment_date or if format provided is not a standard machine-readable format."
+    },
+    {
+      "id": "PDPL-SEC-01",
+      "domain": "Technical & Organizational Security",
+      "requirement": "Encryption of Personal Data at Rest and in Transit",
+      "description": "Personal data must be protected using encryption and pseudonymization proportionate to the risk.",
+      "logic": "FAIL if any user_data or personal_data table has records where encryption_status = 'NONE' or encryption_flag = 0."
+    },
+    {
+      "id": "PDPL-SEC-02",
+      "domain": "Technical & Organizational Security",
+      "requirement": "Access Controls Limited to Authorized Personnel",
+      "description": "Access to personal data must be limited to authorized personnel only, with access controlled by role.",
+      "logic": "FAIL if any user account has access to personal data tables but their role is not in the approved_data_access_roles list, or if users outside the authorized department can query sensitive tables."
+    },
+    {
+      "id": "PDPL-SEC-03",
+      "domain": "Technical & Organizational Security",
+      "requirement": "Regular Security Assessments and DPIAs",
+      "description": "Organizations must conduct periodic security assessments and Data Protection Impact Assessments (DPIAs) for high-risk processing.",
+      "logic": "FAIL if no DPIA record exists for high-risk processing activities, or if the last_assessment_date is older than 12 months."
+    },
+    {
+      "id": "PDPL-BREACH-01",
+      "domain": "Data Breach & Incident Response",
+      "requirement": "Breach Notification Within Required Timeframe",
+      "description": "Data breaches must be reported to the UAE Data Office and affected data subjects promptly.",
+      "logic": "FAIL if any incident record with incident_type = 'DATA_BREACH' has a notification_date more than 72 hours after detection_date, or if notification_date is NULL."
+    },
+    {
+      "id": "PDPL-TRANSFER-01",
+      "domain": "Cross-Border Transfers",
+      "requirement": "International Data Transfers Comply with Adequacy Requirements",
+      "description": "Cross-border transfers of personal data must meet legal requirements and ensure adequate protection.",
+      "logic": "FAIL if any data_transfer record has destination_country in a non-adequate jurisdiction AND transfer_mechanism is NULL or INVALID."
+    },
+    {
+      "id": "PDPL-VENDOR-01",
+      "domain": "Third-Party Management",
+      "requirement": "Data Processing Agreements with Third-Party Processors",
+      "description": "All third-party data processors must be bound by a Data Processing Agreement (DPA) meeting PDPL requirements.",
+      "logic": "FAIL if any vendor record with data_processor_flag = TRUE has no linked DPA document or if DPA expiry_date is past."
+    },
+    {
+      "id": "PDPL-PRIN-01",
+      "domain": "Core Principles",
+      "requirement": "Data Minimization",
+      "description": "Only personal data that is adequate, relevant, and limited to what is necessary for the specified purpose should be collected.",
+      "logic": "FAIL if data_collection records include fields not justified by the stated processing_purpose, or if optional_data_fields are collected without documented justification."
+    },
+    {
+      "id": "PDPL-PRIN-02",
+      "domain": "Core Principles",
+      "requirement": "Storage Limitation — Retention Policy Enforced",
+      "description": "Personal data must be retained only as long as necessary and deleted/anonymized when the purpose is fulfilled.",
+      "logic": "FAIL if any personal data record has a created_date older than its retention_period and deletion_status is NOT 'DELETED' or 'ANONYMIZED'."
+    }
+  ]
+}

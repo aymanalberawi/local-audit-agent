@@ -1,0 +1,255 @@
+version: '3.8'
+
+# ============================================================================
+# FULLY CONTAINERIZED LOCAL AUDIT AGENT - PRODUCTION READY
+# ============================================================================
+# All services run in containers. No host dependencies required.
+# Ollama, PostgreSQL, Redis, Backend, Frontend, and Workers all containerized.
+# ============================================================================
+
+services:
+  # ============================================
+  # STAGE 0: LLM Engine (Ollama)
+  # ============================================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: 00-llm-ollama-engine
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - audit-network
+
+  # ============================================
+  # STAGE 1: Data Layer (Databases & Cache)
+  # ============================================
+  db:
+    image: pgvector/pgvector:pg15
+    container_name: 01-data-postgresql-primary
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: audit_saas
+      POSTGRES_INITDB_ARGS: "-c shared_preload_libraries=vector"
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - audit-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: 02-cache-redis-broker
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - audit-network
+    command: redis-server --appendonly yes
+
+  # ============================================
+  # STAGE 2: Application Layer (API Server)
+  # ============================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: 03-api-fastapi-server
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://admin:password@db:5432/audit_saas
+      - REDIS_URL=redis://redis:6379/0
+      - OLLAMA_URL=http://ollama:11434
+      - OLLAMA_MODEL=llama2:latest
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./backend:/app
+      - ./standards:/standards
+      - ./:/data
+      - backend-uploads:/app/uploads
+    command: sh -c 'python init_db.py && uvicorn main:app --host 0.0.0.0 --port 8000'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - audit-network
+
+  # ============================================
+  # STAGE 3: Background Processing (Workers)
+  # ============================================
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: 04-worker-celery-tasks
+    command: celery -A worker.celery_app worker --loglevel=info -Q main-queue,scheduler-queue,celery --concurrency=2
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://admin:password@db:5432/audit_saas
+      - REDIS_URL=redis://redis:6379/0
+      - OLLAMA_URL=http://ollama:11434
+      - OLLAMA_MODEL=llama2:latest
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./backend:/app
+      - ./standards:/standards
+      - ./:/data
+      - backend-uploads:/app/uploads
+    restart: unless-stopped
+    networks:
+      - audit-network
+
+  # ============================================
+  # STAGE 3B: Scheduled Tasks (Celery Beat)
+  # ============================================
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: 04b-scheduler-celery-beat
+    command: celery -A worker.celery_app beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://admin:password@db:5432/audit_saas
+      - REDIS_URL=redis://redis:6379/0
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
+    networks:
+      - audit-network
+
+  # ============================================
+  # STAGE 4: Presentation Layer (Frontend UI)
+  # ============================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: 05-ui-nextjs-react
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NODE_ENV=production
+    volumes:
+      - ./frontend:/app
+      - /app/.next
+      - /app/node_modules
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - audit-network
+
+  # ============================================
+  # STAGE 5: Database Management (pgAdmin)
+  # ============================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: 07-admin-pgadmin-ui
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@local.dev
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    restart: unless-stopped
+    networks:
+      - audit-network
+
+  # ============================================
+  # STAGE 5B: Optional Test Database (Oracle)
+  # ============================================
+  oracle:
+    image: container-registry.oracle.com/database/free:latest
+    container_name: 08-test-database-oracle
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      - ORACLE_PWD=portal
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    restart: unless-stopped
+    networks:
+      - audit-network
+
+# ============================================
+# VOLUMES (Persistent Data Storage)
+# ============================================
+volumes:
+  pgdata:
+    driver: local
+  redis-data:
+    driver: local
+  ollama-data:
+    driver: local
+  backend-uploads:
+    driver: local
+  pgadmin-data:
+    driver: local
+  oracle-data:
+    driver: local
+
+# ============================================
+# NETWORK (Internal Container Communication)
+# ============================================
+networks:
+  audit-network:
+    driver: bridge

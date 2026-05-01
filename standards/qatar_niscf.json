@@ -1,0 +1,65 @@
+{
+  "standard": "QATAR-NISCF",
+  "full_name": "Qatar National Information Security Compliance Framework (NISCF) — NIA",
+  "version": "2021",
+  "region": "GCC",
+  "authority": "Qatar National Information Assurance (NIA) / NCSA",
+  "controls": [
+    {
+      "id": "QA-NISCF-GOV-01",
+      "domain": "Governance",
+      "requirement": "Information Security Governance Framework Established",
+      "description": "An information security governance framework must be established, documented, and approved by senior leadership.",
+      "logic": "FAIL if no governance_framework document exists with management_approval, or if framework_last_reviewed is older than 12 months."
+    },
+    {
+      "id": "QA-NISCF-GOV-02",
+      "domain": "Governance",
+      "requirement": "Information Security Policy Approved and Communicated",
+      "description": "A formal information security policy must be approved by management and communicated to all staff.",
+      "logic": "FAIL if policy_approval_date = NULL, or if staff_acknowledgement_rate < 90%, or if policy_last_updated older than 12 months."
+    },
+    {
+      "id": "QA-NISCF-RISK-01",
+      "domain": "Risk Management",
+      "requirement": "Risk Assessment Conducted Annually",
+      "description": "A formal information security risk assessment must be conducted at least once a year.",
+      "logic": "FAIL if risk_assessment_date is older than 12 months, or if risk_assessment_scope excludes critical government systems."
+    },
+    {
+      "id": "QA-NISCF-ACC-01",
+      "domain": "Access Control",
+      "requirement": "Access Control Policy Enforced",
+      "description": "Access to government information systems must be restricted based on need-to-know and least privilege principles.",
+      "logic": "FAIL if any user has access to classified systems without formal access_authorization, or if access_review_date older than 90 days."
+    },
+    {
+      "id": "QA-NISCF-ACC-02",
+      "domain": "Access Control",
+      "requirement": "Privileged Access Strictly Controlled",
+      "description": "All privileged accounts must be individually authorized, monitored, and reviewed quarterly.",
+      "logic": "FAIL if any privileged account has no formal_authorization, or if privileged_session_monitoring = FALSE, or if review_date older than 90 days."
+    },
+    {
+      "id": "QA-NISCF-INC-01",
+      "domain": "Incident Management",
+      "requirement": "Security Incidents Reported to NIA",
+      "description": "All significant information security incidents must be reported to Qatar NIA within defined timeframes.",
+      "logic": "FAIL if any major_incident has nia_notification_sent = FALSE, or if notification_delay_hours > 4 for CRITICAL incidents."
+    },
+    {
+      "id": "QA-NISCF-CONT-01",
+      "domain": "Continuity",
+      "requirement": "Business Continuity Plan Tested",
+      "description": "A Business Continuity Plan must be in place and tested annually.",
+      "logic": "FAIL if bcp_tested = FALSE in the last 12 months, or if bcp_test_result = 'FAILED'."
+    },
+    {
+      "id": "QA-NISCF-COMP-01",
+      "domain": "Compliance",
+      "requirement": "Compliance with Qatar Laws and Regulations",
+      "description": "The organization must maintain compliance with all applicable Qatari laws including Cybercrime Law No. 14 of 2014.",
+      "logic": "FAIL if any compliance_item with applicable_law LIKE '%Qatar%' has compliance_status = 'NON_COMPLIANT'."
+    }
+  ]
+}

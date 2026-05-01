@@ -1,0 +1,135 @@
+{
+  "standard": "EU-GDPR",
+  "full_name": "EU General Data Protection Regulation (Regulation (EU) 2016/679)",
+  "version": "2018 (effective)",
+  "region": "EU",
+  "authority": "European Data Protection Board (EDPB) / National DPAs",
+  "controls": [
+    {
+      "id": "GDPR-ART5-01",
+      "domain": "Article 5: Principles",
+      "requirement": "Lawfulness, Fairness, and Transparency",
+      "description": "All personal data processing must have a documented lawful basis and be communicated transparently to data subjects.",
+      "logic": "FAIL if any processing_activity record has lawful_basis = NULL or if privacy_notice_provided = FALSE for data collected from EU subjects."
+    },
+    {
+      "id": "GDPR-ART5-02",
+      "domain": "Article 5: Principles",
+      "requirement": "Purpose Limitation",
+      "description": "Personal data must be collected for specified, explicit, and legitimate purposes and not further processed in an incompatible manner.",
+      "logic": "FAIL if any data processing activity uses personal data for purposes not listed in the original processing_purpose_statement, or if secondary_purpose_documented = FALSE."
+    },
+    {
+      "id": "GDPR-ART5-03",
+      "domain": "Article 5: Principles",
+      "requirement": "Data Minimization",
+      "description": "Only personal data adequate, relevant, and limited to what is necessary must be collected.",
+      "logic": "FAIL if any data_field in the collection schema has collection_justification = NULL or if unnecessary_field_flag = TRUE."
+    },
+    {
+      "id": "GDPR-ART5-04",
+      "domain": "Article 5: Principles",
+      "requirement": "Accuracy",
+      "description": "Personal data must be accurate and, where necessary, kept up to date. Inaccurate data must be erased or rectified without delay.",
+      "logic": "FAIL if any personal data record has data_accuracy_verified = FALSE, or if last_data_quality_check is older than 12 months for actively used data."
+    },
+    {
+      "id": "GDPR-ART5-05",
+      "domain": "Article 5: Principles",
+      "requirement": "Storage Limitation — Retention Policy Enforced",
+      "description": "Personal data must not be kept in identifiable form longer than necessary for the processing purpose.",
+      "logic": "FAIL if any personal data record has created_date older than retention_period_days AND deletion_status NOT IN ('DELETED','ANONYMIZED','PSEUDONYMIZED')."
+    },
+    {
+      "id": "GDPR-ART5-06",
+      "domain": "Article 5: Principles",
+      "requirement": "Integrity and Confidentiality",
+      "description": "Personal data must be processed with appropriate security against unauthorized access, loss, or damage.",
+      "logic": "FAIL if any personal data store has encryption_at_rest = FALSE or access_control_enabled = FALSE."
+    },
+    {
+      "id": "GDPR-ART6-01",
+      "domain": "Article 6: Lawfulness",
+      "requirement": "Valid Consent Collected and Documented",
+      "description": "Where consent is the lawful basis, it must be documented, freely given, specific, informed, and withdrawable.",
+      "logic": "FAIL if any consent record is missing consent_timestamp, consent_version, or consent_withdrawal_mechanism, or if consent was pre-ticked."
+    },
+    {
+      "id": "GDPR-ART13-01",
+      "domain": "Article 13: Transparency",
+      "requirement": "Privacy Notice Provided at Point of Collection",
+      "description": "Data subjects must receive privacy information at the point of data collection including controller identity, processing purposes, and rights.",
+      "logic": "FAIL if any data collection event has no linked privacy_notice_version, or if privacy_notice_presented = FALSE."
+    },
+    {
+      "id": "GDPR-ART17-01",
+      "domain": "Article 17: Right to Erasure",
+      "requirement": "Erasure Requests Fulfilled Within 30 Days",
+      "description": "When a data subject exercises the right to erasure and no overriding legitimate grounds exist, data must be erased within 30 days.",
+      "logic": "FAIL if any erasure_request record has status = 'PENDING' and request_date is more than 30 days ago, or if erasure_completed_date - request_date > 30."
+    },
+    {
+      "id": "GDPR-ART20-01",
+      "domain": "Article 20: Data Portability",
+      "requirement": "Data Portability Requests Fulfilled in Machine-Readable Format",
+      "description": "Data subjects have the right to receive their personal data in a structured, commonly used, and machine-readable format.",
+      "logic": "FAIL if any portability_request has fulfillment_format NOT IN ('JSON','CSV','XML'), or if request_fulfillment_date is NULL for requests older than 30 days."
+    },
+    {
+      "id": "GDPR-ART25-01",
+      "domain": "Article 25: Privacy by Design",
+      "requirement": "Data Protection by Design and by Default",
+      "description": "Privacy safeguards must be integrated into system design. Only minimum necessary data should be processed by default.",
+      "logic": "FAIL if any new system or feature deployed in the last 12 months has dpia_conducted = FALSE, or if default_data_scope exceeds minimum_necessary_scope."
+    },
+    {
+      "id": "GDPR-ART30-01",
+      "domain": "Article 30: Records",
+      "requirement": "Record of Processing Activities (ROPA) Maintained",
+      "description": "Controllers and processors must maintain a comprehensive record of processing activities.",
+      "logic": "FAIL if any active data processing activity has no corresponding ROPA entry, or if ROPA record lacks controller_name, purpose, data_categories, or recipients."
+    },
+    {
+      "id": "GDPR-ART32-01",
+      "domain": "Article 32: Security",
+      "requirement": "Pseudonymization and Encryption Implemented",
+      "description": "Technical measures including pseudonymization and encryption must be implemented where appropriate to protect personal data.",
+      "logic": "FAIL if any personal data table has encryption_enabled = FALSE or if sensitive_field_flag = TRUE but pseudonymization_applied = FALSE."
+    },
+    {
+      "id": "GDPR-ART32-02",
+      "domain": "Article 32: Security",
+      "requirement": "Security Measures Regularly Tested and Evaluated",
+      "description": "A process for regularly testing, assessing, and evaluating the effectiveness of technical and organizational security measures must exist.",
+      "logic": "FAIL if no security_test record exists for the current quarter, or if penetration_test_date is older than 12 months for systems processing sensitive data."
+    },
+    {
+      "id": "GDPR-ART33-01",
+      "domain": "Article 33: Breach Notification",
+      "requirement": "Supervisory Authority Notified of Breach Within 72 Hours",
+      "description": "Personal data breaches likely to result in risk to individuals must be notified to the supervisory authority within 72 hours of becoming aware.",
+      "logic": "FAIL if any data_breach record has supervisory_authority_notified = FALSE and hours_since_detection > 72, or if risk_to_individuals = TRUE but notification_sent = FALSE."
+    },
+    {
+      "id": "GDPR-ART35-01",
+      "domain": "Article 35: DPIA",
+      "requirement": "Data Protection Impact Assessment for High-Risk Processing",
+      "description": "A DPIA must be carried out before processing that is likely to result in a high risk to individuals.",
+      "logic": "FAIL if any high_risk_processing_activity record has dpia_status = 'NOT_CONDUCTED' or if dpia_date is older than 36 months."
+    },
+    {
+      "id": "GDPR-ART28-01",
+      "domain": "Article 28: Processors",
+      "requirement": "Data Processing Agreements with All Processors",
+      "description": "All data processors must be bound by a Data Processing Agreement imposing appropriate data protection obligations.",
+      "logic": "FAIL if any vendor record with processor_type = 'DATA_PROCESSOR' and jurisdiction = 'EU' has no DPA, or if DPA lacks required clauses on security measures and sub-processor controls."
+    },
+    {
+      "id": "GDPR-ART46-01",
+      "domain": "Article 46: Cross-Border Transfers",
+      "requirement": "Adequate Transfer Mechanisms for Third-Country Transfers",
+      "description": "Transfers of personal data to third countries must be based on an adequacy decision, standard contractual clauses, or other approved mechanisms.",
+      "logic": "FAIL if any data_transfer record has destination_country NOT IN adequate_countries_list AND transfer_mechanism = NULL or transfer_mechanism NOT IN ('SCC','BCR','ADEQUACY_DECISION','DEROGATION')."
+    }
+  ]
+}

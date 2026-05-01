@@ -1,0 +1,149 @@
+{
+  "standard": "NIST-CSF",
+  "full_name": "NIST Cybersecurity Framework 2.0",
+  "version": "2.0 (2024)",
+  "region": "US",
+  "authority": "National Institute of Standards and Technology (NIST)",
+  "controls": [
+    {
+      "id": "NIST-GV.OC-01",
+      "domain": "Govern: Organizational Context",
+      "requirement": "Cybersecurity Roles and Responsibilities Defined",
+      "description": "Organizational roles and responsibilities for cybersecurity must be established, communicated, and enforced.",
+      "logic": "FAIL if any critical system or data asset has no designated security_owner, or if cybersecurity_responsibility_matrix has not been reviewed in the last 12 months."
+    },
+    {
+      "id": "NIST-GV.RM-01",
+      "domain": "Govern: Risk Management Strategy",
+      "requirement": "Risk Tolerance and Appetite Defined",
+      "description": "The organization's risk tolerance and appetite for cybersecurity risk must be determined and expressed.",
+      "logic": "FAIL if no risk_tolerance_statement exists approved by senior leadership, or if risk_appetite has not been reviewed in the last 12 months."
+    },
+    {
+      "id": "NIST-GV.PO-01",
+      "domain": "Govern: Policy",
+      "requirement": "Cybersecurity Policy Established and Maintained",
+      "description": "Cybersecurity policies must be established, documented, approved, and communicated based on organizational requirements.",
+      "logic": "FAIL if cybersecurity_policy has no approval_date, or if policy_last_updated is older than 12 months, or if employee_acknowledgement_rate < 90%."
+    },
+    {
+      "id": "NIST-GV.SC-01",
+      "domain": "Govern: Supply Chain Risk Management",
+      "requirement": "Cybersecurity Supply Chain Risk Managed",
+      "description": "Cyber supply chain risk management practices must be identified, established, managed, and monitored by organizational stakeholders.",
+      "logic": "FAIL if any critical supplier has no cybersecurity_risk_assessment, or if supplier contracts lack security_requirements, or if last_supplier_review is older than 12 months."
+    },
+    {
+      "id": "NIST-ID.AM-01",
+      "domain": "Identify: Asset Management",
+      "requirement": "Asset Inventory Maintained",
+      "description": "Physical and software assets within the organization must be inventoried and managed consistent with risk strategy.",
+      "logic": "FAIL if any asset record has classification = NULL, owner = NULL, or asset_last_updated older than 12 months."
+    },
+    {
+      "id": "NIST-ID.AM-02",
+      "domain": "Identify: Asset Management",
+      "requirement": "Data Assets Mapped and Classified",
+      "description": "Data and information assets must be classified based on sensitivity and business criticality.",
+      "logic": "FAIL if any data_store or database has data_classification = NULL, or if data_flow_diagram_date is older than 24 months."
+    },
+    {
+      "id": "NIST-ID.RA-01",
+      "domain": "Identify: Risk Assessment",
+      "requirement": "Vulnerabilities Identified and Documented",
+      "description": "Vulnerabilities in assets must be identified and documented as part of an ongoing risk assessment process.",
+      "logic": "FAIL if any system asset has last_vulnerability_scan older than 30 days, or if identified_vulnerabilities with cvss_score >= 7.0 have no remediation_plan."
+    },
+    {
+      "id": "NIST-PR.AA-01",
+      "domain": "Protect: Access Control",
+      "requirement": "Identities and Credentials Managed",
+      "description": "Identities and credentials for authorized users, services, and hardware must be managed.",
+      "logic": "FAIL if any user account has no expiry_date set, or if service_accounts have password_last_rotated older than 90 days, or if default_credentials_changed = FALSE."
+    },
+    {
+      "id": "NIST-PR.AA-02",
+      "domain": "Protect: Access Control",
+      "requirement": "Remote Access Managed Securely",
+      "description": "Remote access to assets must be managed securely with appropriate authentication controls.",
+      "logic": "FAIL if any remote_access record shows mfa_used = FALSE, or if vpn_session_logging = FALSE, or if remote_access_policy_review_date is older than 12 months."
+    },
+    {
+      "id": "NIST-PR.AA-03",
+      "domain": "Protect: Access Control",
+      "requirement": "Least Privilege Access Enforced",
+      "description": "Access permissions must be limited to the minimum necessary for each user's role.",
+      "logic": "FAIL if any user has permissions beyond their role_definition, or if access_review has not been performed in the last 90 days for privileged users."
+    },
+    {
+      "id": "NIST-PR.DS-01",
+      "domain": "Protect: Data Security",
+      "requirement": "Data at Rest Protected",
+      "description": "Data at rest must be protected through encryption or other appropriate mechanisms.",
+      "logic": "FAIL if any sensitive data table or file store has encryption_at_rest = FALSE or data_protection_mechanism = 'NONE'."
+    },
+    {
+      "id": "NIST-PR.DS-02",
+      "domain": "Protect: Data Security",
+      "requirement": "Data in Transit Protected",
+      "description": "Data in transit must be protected through encryption.",
+      "logic": "FAIL if any network communication involving sensitive data uses http instead of https, or if tls_version < 1.2."
+    },
+    {
+      "id": "NIST-PR.PS-01",
+      "domain": "Protect: Platform Security",
+      "requirement": "Systems Configured Securely",
+      "description": "System components including hardware, software, and services must be secured through baseline configurations.",
+      "logic": "FAIL if any system has hardening_baseline_applied = FALSE, or if default_password_changed = FALSE, or if unnecessary_services_disabled = FALSE."
+    },
+    {
+      "id": "NIST-PR.PS-02",
+      "domain": "Protect: Platform Security",
+      "requirement": "Patch Management Active",
+      "description": "Patches and updates must be applied to all systems in a timely manner.",
+      "logic": "FAIL if any system has critical_patches_pending older than 30 days, or if patch_management_policy_exists = FALSE."
+    },
+    {
+      "id": "NIST-PR.AT-01",
+      "domain": "Protect: Awareness and Training",
+      "requirement": "Security Awareness Training Provided",
+      "description": "All personnel must receive cybersecurity awareness training regularly.",
+      "logic": "FAIL if any active employee has security_training_completed = FALSE, or if training_completion_date is older than 12 months."
+    },
+    {
+      "id": "NIST-DE.CM-01",
+      "domain": "Detect: Continuous Monitoring",
+      "requirement": "Networks Monitored for Cybersecurity Events",
+      "description": "Networks and network services must be monitored to detect potential cybersecurity events.",
+      "logic": "FAIL if network_monitoring_enabled = FALSE for any critical network segment, or if ids_ips_active = FALSE, or if last_alert_review is older than 24 hours."
+    },
+    {
+      "id": "NIST-DE.CM-02",
+      "domain": "Detect: Continuous Monitoring",
+      "requirement": "Log Collection and Analysis Active",
+      "description": "Log data from multiple sources must be collected, analyzed, and reviewed for anomalous activity.",
+      "logic": "FAIL if any critical system has log_collection_enabled = FALSE, or if log_retention_days < 90, or if last_log_analysis_date is older than 7 days."
+    },
+    {
+      "id": "NIST-RS.MA-01",
+      "domain": "Respond: Incident Management",
+      "requirement": "Incident Response Plan Executed on Detection",
+      "description": "An incident response plan must be activated upon detection of a cybersecurity incident.",
+      "logic": "FAIL if any security_incident with severity IN ('HIGH','CRITICAL') has incident_response_plan_activated = FALSE, or if response_initiation_time > 4 hours after detection."
+    },
+    {
+      "id": "NIST-RS.CO-01",
+      "domain": "Respond: Communication",
+      "requirement": "Incident Reporting to Appropriate Parties",
+      "description": "Incidents must be reported to appropriate internal and external stakeholders consistent with response plans.",
+      "logic": "FAIL if any major incident has stakeholder_notification_sent = FALSE within 24 hours, or if regulatory_notification_required = TRUE but notification_sent = FALSE."
+    },
+    {
+      "id": "NIST-RC.RP-01",
+      "domain": "Recover: Recovery Planning",
+      "requirement": "Recovery Plans Executed and Validated",
+      "description": "Recovery processes must be executed and maintained to ensure organizational resilience.",
+      "logic": "FAIL if business_continuity_plan_tested = FALSE in the last 12 months, or if recovery_time_objective was missed during last incident, or if rto_met = FALSE."
+    }
+  ]
+}

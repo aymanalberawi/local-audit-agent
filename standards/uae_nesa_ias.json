@@ -1,0 +1,135 @@
+{
+  "standard": "UAE-NESA-IAS",
+  "full_name": "UAE National Electronic Security Authority — Information Assurance Standards",
+  "version": "2014 (enforced by UAE SIA)",
+  "region": "GCC",
+  "authority": "UAE Signals Intelligence Agency (formerly NESA)",
+  "controls": [
+    {
+      "id": "NESA-M1-01",
+      "domain": "M1: Strategy and Planning",
+      "requirement": "Information Security Policy Exists and Is Approved",
+      "description": "A formal, board-approved information security policy must exist, be communicated to all staff, and be reviewed annually.",
+      "logic": "FAIL if no policy document record exists, if approval_date is NULL, or if last_review_date is older than 12 months."
+    },
+    {
+      "id": "NESA-M1-02",
+      "domain": "M1: Strategy and Planning",
+      "requirement": "Information Security Strategy Aligned to Business Strategy",
+      "description": "An information security strategy must be documented, approved by senior management, and aligned to organizational objectives.",
+      "logic": "FAIL if strategy document has no senior_management_approval or if strategy_review_date is older than 24 months."
+    },
+    {
+      "id": "NESA-M2-01",
+      "domain": "M2: Information Security Risk Management",
+      "requirement": "Formal Risk Assessment Conducted and Documented",
+      "description": "A formal risk assessment must be conducted at least annually covering all critical assets and information systems.",
+      "logic": "FAIL if no risk_assessment record exists, or if the most recent assessment_date is older than 12 months, or if risk_score and treatment_plan are NULL."
+    },
+    {
+      "id": "NESA-M2-02",
+      "domain": "M2: Information Security Risk Management",
+      "requirement": "Risk Treatment Plans Defined and Tracked",
+      "description": "For every identified risk above the accepted threshold, a treatment plan must exist with an owner and target completion date.",
+      "logic": "FAIL if any risk record with risk_level IN ('HIGH','CRITICAL') has no linked treatment_plan or if treatment_owner is NULL."
+    },
+    {
+      "id": "NESA-M3-01",
+      "domain": "M3: Awareness and Training",
+      "requirement": "Security Awareness Training Completed by All Staff",
+      "description": "All employees and contractors must complete security awareness training annually.",
+      "logic": "FAIL if any active employee record has no training_completion_date within the last 12 months for the security_awareness course."
+    },
+    {
+      "id": "NESA-M4-01",
+      "domain": "M4: Human Resource Security",
+      "requirement": "Background Checks Completed Before Employment",
+      "description": "Background verification checks must be completed for all employees before they are granted access to systems.",
+      "logic": "FAIL if any employee record has system_access_granted_date earlier than background_check_completion_date, or if background_check_status is NULL."
+    },
+    {
+      "id": "NESA-M4-02",
+      "domain": "M4: Human Resource Security",
+      "requirement": "Access Revoked Immediately on Termination",
+      "description": "User access to all systems must be revoked within 24 hours of employment termination.",
+      "logic": "FAIL if any terminated_employee record has account_disabled_date more than 1 day after termination_date, or if account_status is still 'ACTIVE' after termination."
+    },
+    {
+      "id": "NESA-M5-01",
+      "domain": "M5: Compliance",
+      "requirement": "Compliance with UAE Laws and Regulations Tracked",
+      "description": "Organization must maintain a register of applicable laws and regulations and track compliance status for each.",
+      "logic": "FAIL if any compliance_register record has status = 'NON_COMPLIANT' or if last_review_date is older than 6 months."
+    },
+    {
+      "id": "NESA-M6-01",
+      "domain": "M6: Performance Evaluation and Improvement",
+      "requirement": "Information Security Metrics Collected and Reported",
+      "description": "Key performance indicators and metrics must be collected and reported to management quarterly.",
+      "logic": "FAIL if no metrics_report record exists for the current quarter, or if metrics_reported_to_management = FALSE."
+    },
+    {
+      "id": "NESA-T1-01",
+      "domain": "T1: Asset Management",
+      "requirement": "All Information Assets Inventoried and Classified",
+      "description": "A complete, up-to-date inventory of all information assets must exist with classification labels (Public, Internal, Confidential, Restricted).",
+      "logic": "FAIL if any asset record has classification = NULL or if asset_last_updated is older than 12 months."
+    },
+    {
+      "id": "NESA-T2-01",
+      "domain": "T2: Physical and Environmental Security",
+      "requirement": "Physical Access Controls to Data Centers and Server Rooms",
+      "description": "Physical access to data centers and server rooms must be restricted to authorized personnel with logged access records.",
+      "logic": "FAIL if physical_access_log records exist for unauthorized personnel, or if access_log_review_date is older than 30 days."
+    },
+    {
+      "id": "NESA-T3-01",
+      "domain": "T3: Operations Management",
+      "requirement": "Change Management Process Followed for System Changes",
+      "description": "All system changes must go through a formal change management process with approval and testing documentation.",
+      "logic": "FAIL if any change_request record has change_status = 'DEPLOYED' but approval_status != 'APPROVED' or test_result is NULL."
+    },
+    {
+      "id": "NESA-T3-02",
+      "domain": "T3: Operations Management",
+      "requirement": "Backup and Recovery Procedures Tested",
+      "description": "Data backup procedures must be in place and recovery tests must be conducted at least semi-annually.",
+      "logic": "FAIL if any critical_system record has no backup_test_date, or if backup_test_date is older than 6 months, or if last_backup_result = 'FAILED'."
+    },
+    {
+      "id": "NESA-T5-01",
+      "domain": "T5: Access Control",
+      "requirement": "Least Privilege Access Enforced",
+      "description": "User access rights must be limited to only what is required for their role. Privileged access must be separately authorized.",
+      "logic": "FAIL if any user has access permissions exceeding their role_definition, or if privileged_access flag is TRUE but privileged_access_approval is NULL."
+    },
+    {
+      "id": "NESA-T5-02",
+      "domain": "T5: Access Control",
+      "requirement": "Privileged Access Accounts Reviewed Quarterly",
+      "description": "All privileged (admin) accounts must be formally reviewed and re-approved every quarter.",
+      "logic": "FAIL if any account with is_privileged = TRUE has last_access_review_date older than 90 days."
+    },
+    {
+      "id": "NESA-T5-03",
+      "domain": "T5: Access Control",
+      "requirement": "Multi-Factor Authentication for Remote and Privileged Access",
+      "description": "MFA must be enforced for all remote access and all privileged account logins.",
+      "logic": "FAIL if any user with remote_access = TRUE or is_privileged = TRUE has mfa_enabled = FALSE."
+    },
+    {
+      "id": "NESA-T8-01",
+      "domain": "T8: Information Security Incident Management",
+      "requirement": "Security Incidents Logged, Classified, and Responded To",
+      "description": "All security incidents must be logged with classification, response timeline, and resolution documented.",
+      "logic": "FAIL if any incident record has no classification, or if response_initiated_date is more than 4 hours after detection_date for HIGH/CRITICAL incidents."
+    },
+    {
+      "id": "NESA-T9-01",
+      "domain": "T9: Information Security Continuity Management",
+      "requirement": "Business Continuity Plan Exists and Is Tested",
+      "description": "A Business Continuity Plan (BCP) must exist, be approved, and tested at least annually.",
+      "logic": "FAIL if no BCP document exists, or if bcp_test_date is older than 12 months, or if bcp_test_result = 'FAILED'."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+user_id,username,email,is_admin,created_at
+1,john_doe,john@example.com,false,2026-01-15
+2,jane_smith,jane@example.com,true,2026-02-20
+3,bob_wilson,bob@example.com,false,2026-03-10
+4,alice_johnson,alice@example.com,false,2026-04-01
+5,charlie_brown,charlie@example.com,false,2026-04-15

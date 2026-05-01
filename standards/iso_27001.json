@@ -1,0 +1,149 @@
+{
+  "standard": "ISO-27001",
+  "full_name": "ISO/IEC 27001:2022 — Information Security Management Systems",
+  "version": "2022",
+  "region": "GLOBAL",
+  "authority": "International Organization for Standardization (ISO) / IEC",
+  "controls": [
+    {
+      "id": "ISO-5.1",
+      "domain": "Organizational Controls",
+      "requirement": "Information Security Policies",
+      "description": "Policies for information security must be defined, approved by management, published, and communicated to all relevant staff.",
+      "logic": "FAIL if no information_security_policy record exists, if policy_approved_by is NULL, or if last_review_date is older than 12 months."
+    },
+    {
+      "id": "ISO-5.2",
+      "domain": "Organizational Controls",
+      "requirement": "Information Security Roles and Responsibilities",
+      "description": "All information security responsibilities must be clearly defined and allocated.",
+      "logic": "FAIL if any critical system or data asset has no defined security_owner or if the security_owner field is NULL."
+    },
+    {
+      "id": "ISO-5.3",
+      "domain": "Organizational Controls",
+      "requirement": "Segregation of Duties",
+      "description": "Conflicting duties and conflicting areas of responsibility must be segregated to reduce opportunities for unauthorized or unintentional modification or misuse.",
+      "logic": "FAIL if any user has permissions to both approve_transactions AND execute_transactions in the same system, indicating a segregation of duties conflict."
+    },
+    {
+      "id": "ISO-5.15",
+      "domain": "Organizational Controls",
+      "requirement": "Access Control Policy",
+      "description": "Rules to control physical and logical access to information and other associated assets must be established and documented.",
+      "logic": "FAIL if no access_control_policy document exists, or if user access provisioning records show access granted without documented business_justification."
+    },
+    {
+      "id": "ISO-5.16",
+      "domain": "Organizational Controls",
+      "requirement": "Identity Management",
+      "description": "The full lifecycle of identities must be managed — creation, modification, and deletion of user accounts must follow a defined process.",
+      "logic": "FAIL if any user account has no creation_request_id, or if accounts are not disabled within 1 business day of employment termination."
+    },
+    {
+      "id": "ISO-5.17",
+      "domain": "Organizational Controls",
+      "requirement": "Authentication Information Management",
+      "description": "Authentication information management practices must be in place — passwords must meet complexity requirements, be rotated, and not be shared.",
+      "logic": "FAIL if any user account has password_last_changed older than 90 days, or if password_complexity_enforced = FALSE, or if shared_account = TRUE."
+    },
+    {
+      "id": "ISO-5.18",
+      "domain": "Organizational Controls",
+      "requirement": "Access Rights Reviewed Regularly",
+      "description": "Access rights to information and systems must be reviewed at regular intervals and on any change of employment.",
+      "logic": "FAIL if any user account has last_access_review_date older than 90 days for privileged users or 6 months for standard users."
+    },
+    {
+      "id": "ISO-5.23",
+      "domain": "Organizational Controls",
+      "requirement": "Information Security for Cloud Services",
+      "description": "Processes for acquisition, use, management, and exit from cloud services must be defined and controlled.",
+      "logic": "FAIL if any cloud_service record has no security_assessment_date, or if cloud_data_classification is NULL."
+    },
+    {
+      "id": "ISO-5.28",
+      "domain": "Organizational Controls",
+      "requirement": "Collection of Evidence",
+      "description": "The organization must define and apply procedures for the identification, collection, acquisition, and preservation of evidence related to information security events.",
+      "logic": "FAIL if incident records lack forensic_evidence_collected flag, or if evidence_chain_of_custody is not maintained."
+    },
+    {
+      "id": "ISO-6.1",
+      "domain": "People Controls",
+      "requirement": "Screening of Employees",
+      "description": "Background verification checks must be conducted on all candidates for employment prior to joining.",
+      "logic": "FAIL if any employee record has system_access_date earlier than background_screening_completed_date, or if background_screening_status = 'PENDING'."
+    },
+    {
+      "id": "ISO-6.3",
+      "domain": "People Controls",
+      "requirement": "Information Security Awareness Training",
+      "description": "All employees and relevant contractors must complete information security awareness training on hire and annually thereafter.",
+      "logic": "FAIL if any active user has no security_training_completion_date, or if last_training_date is older than 12 months."
+    },
+    {
+      "id": "ISO-7.1",
+      "domain": "Physical Controls",
+      "requirement": "Physical Security Perimeters",
+      "description": "Security perimeters must be defined and used to protect areas containing sensitive information and associated assets.",
+      "logic": "FAIL if any server_room or data_center record has physical_access_control_enabled = FALSE, or if unauthorized_access_events exist in the last 30 days."
+    },
+    {
+      "id": "ISO-8.2",
+      "domain": "Technological Controls",
+      "requirement": "Privileged Access Rights",
+      "description": "The allocation and use of privileged access rights must be restricted and controlled.",
+      "logic": "FAIL if any account with is_privileged = TRUE has no formal authorization_record, or if privileged_session_logging = FALSE."
+    },
+    {
+      "id": "ISO-8.5",
+      "domain": "Technological Controls",
+      "requirement": "Secure Authentication",
+      "description": "Secure authentication technologies and procedures must be implemented based on access restriction requirements.",
+      "logic": "FAIL if MFA is not enabled for any user accessing sensitive systems or remote access, or if authentication_strength = 'WEAK'."
+    },
+    {
+      "id": "ISO-8.7",
+      "domain": "Technological Controls",
+      "requirement": "Protection Against Malware",
+      "description": "Protection against malware must be implemented and supported by appropriate user awareness training.",
+      "logic": "FAIL if any endpoint device has antimalware_installed = FALSE or antimalware_definitions_updated_date older than 7 days."
+    },
+    {
+      "id": "ISO-8.8",
+      "domain": "Technological Controls",
+      "requirement": "Management of Technical Vulnerabilities",
+      "description": "Information about technical vulnerabilities of systems must be obtained, the organization's exposure evaluated, and appropriate measures taken.",
+      "logic": "FAIL if any system asset has vulnerability_scan_date older than 30 days, or if critical_vulnerabilities_open with age > 15 days exist."
+    },
+    {
+      "id": "ISO-8.12",
+      "domain": "Technological Controls",
+      "requirement": "Data Leakage Prevention",
+      "description": "Data leakage prevention measures must be applied to systems, networks, and endpoint devices that process, store, or transmit sensitive information.",
+      "logic": "FAIL if any sensitive data transfer occurs without dlp_policy_applied = TRUE, or if dlp_solution_enabled = FALSE on any endpoint handling classified data."
+    },
+    {
+      "id": "ISO-8.15",
+      "domain": "Technological Controls",
+      "requirement": "Logging",
+      "description": "Logs that record activities, exceptions, faults, and other relevant events must be produced, stored, protected, and analyzed.",
+      "logic": "FAIL if any critical system has logging_enabled = FALSE, or if log_retention_days is less than 90, or if logs are not protected from tampering."
+    },
+    {
+      "id": "ISO-8.16",
+      "domain": "Technological Controls",
+      "requirement": "Monitoring Activities",
+      "description": "Networks, systems, and applications must be monitored for anomalous behavior and appropriate actions taken.",
+      "logic": "FAIL if monitoring_enabled = FALSE for any critical system, or if last_alert_review_date is older than 24 hours for active monitoring."
+    },
+    {
+      "id": "ISO-8.24",
+      "domain": "Technological Controls",
+      "requirement": "Use of Cryptography",
+      "description": "Rules for the effective use of cryptography, including cryptographic key management, must be defined and implemented.",
+      "logic": "FAIL if any sensitive data field has encryption_algorithm IN ('MD5','SHA1','DES','RC4') (deprecated), or if encryption_key_rotation_date is older than 12 months."
+    }
+  ]
+}

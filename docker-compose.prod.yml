@@ -1,0 +1,107 @@
+# ============================================================================
+# Production Override Configuration
+# ============================================================================
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# This overrides development settings with production-appropriate values
+
+version: '3.8'
+
+services:
+  # Disable Ollama in production (use external LLM or managed service)
+  ollama:
+    profiles:
+      - donotstart
+    # Uncomment below to use external Ollama
+    # image: ollama/ollama:latest
+    # environment:
+    #   - OLLAMA_HOST=0.0.0.0:11434
+    # ports:
+    #   - "11434:11434"
+
+  db:
+    restart: always
+    environment:
+      # Use strong password from secrets management
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Backup volume
+      - db-backups:/backups
+
+  redis:
+    restart: always
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_password}
+    volumes:
+      - redis-data:/data
+
+  backend:
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_password}
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+    # Don't expose port - use reverse proxy
+    ports: []
+    expose:
+      - "8000"
+
+  worker:
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_password}
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  scheduler:
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_password}
+
+  frontend:
+    restart: always
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${FRONTEND_API_URL:-https://api.yourdomain.com}
+    # Don't expose port - use reverse proxy
+    ports: []
+    expose:
+      - "3000"
+    build:
+      context: ./frontend
+      cache_from:
+        - type=registry,ref=your-registry/audit-frontend:latest
+
+  # Disable pgAdmin in production
+  pgadmin:
+    profiles:
+      - donotstart
+
+  # Disable Oracle test DB in production
+  oracle:
+    profiles:
+      - donotstart
+
+volumes:
+  pgdata:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  redis-data:
+    driver: local
+  backend-uploads:
+    driver: local
+  db-backups:
+    driver: local
+  ollama-data:
+    driver: local
+
+networks:
+  audit-network:
+    driver: bridge

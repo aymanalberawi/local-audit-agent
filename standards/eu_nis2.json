@@ -1,0 +1,79 @@
+{
+  "standard": "EU-NIS2",
+  "full_name": "EU Network and Information Security Directive 2 (NIS2) — Directive (EU) 2022/2555",
+  "version": "2022 (transposed by October 2024)",
+  "region": "EU",
+  "authority": "European Union Agency for Cybersecurity (ENISA) / National Authorities",
+  "controls": [
+    {
+      "id": "NIS2-RISK-01",
+      "domain": "Risk Management",
+      "requirement": "Cybersecurity Risk Management Measures Implemented",
+      "description": "Organizations must implement appropriate and proportionate technical, operational, and organizational measures to manage cybersecurity risks.",
+      "logic": "FAIL if no cybersecurity_risk_assessment exists, or if last_assessment_date is older than 12 months, or if high_risks with no treatment_plan exist."
+    },
+    {
+      "id": "NIS2-GOV-01",
+      "domain": "Governance",
+      "requirement": "Management Body Oversight of Cybersecurity",
+      "description": "The management body of the entity must approve cybersecurity risk management measures and oversee their implementation. Management can be held personally liable.",
+      "logic": "FAIL if no management_approval record exists for the cybersecurity_policy, or if management_training_on_cybersecurity = FALSE."
+    },
+    {
+      "id": "NIS2-INC-01",
+      "domain": "Incident Handling",
+      "requirement": "Significant Incidents Reported Within 24/72 Hours",
+      "description": "Significant incidents must be reported: early warning within 24 hours, full notification within 72 hours, final report within 1 month.",
+      "logic": "FAIL if any significant_incident has early_warning_sent = FALSE and hours_since_detection > 24, or if full_notification_sent = FALSE and hours_since_detection > 72."
+    },
+    {
+      "id": "NIS2-BC-01",
+      "domain": "Business Continuity",
+      "requirement": "Business Continuity and Crisis Management",
+      "description": "Business continuity measures including backup management, disaster recovery, and crisis management must be in place.",
+      "logic": "FAIL if business_continuity_plan_exists = FALSE, or if backup_tested_date is older than 6 months, or if crisis_management_exercise_date older than 12 months."
+    },
+    {
+      "id": "NIS2-SC-01",
+      "domain": "Supply Chain Security",
+      "requirement": "Supply Chain Security Addressed",
+      "description": "Security in the supply chain including the relationship between entities and their direct suppliers must be addressed.",
+      "logic": "FAIL if any critical supplier has no security_assessment, or if supplier contracts lack cybersecurity_requirements, or if review_date older than 12 months."
+    },
+    {
+      "id": "NIS2-NET-01",
+      "domain": "Network and Information Security",
+      "requirement": "Network Segmentation and Perimeter Security",
+      "description": "Network and information system security measures must include network segmentation and access controls.",
+      "logic": "FAIL if critical systems are not in a segmented network zone, or if network_segmentation_policy = FALSE, or if direct internet access exists to core systems."
+    },
+    {
+      "id": "NIS2-CRYPT-01",
+      "domain": "Cryptography",
+      "requirement": "Use of Cryptography and Encryption",
+      "description": "Policies and procedures on the use of cryptography and, where appropriate, encryption must be in place.",
+      "logic": "FAIL if any sensitive data at rest or in transit lacks encryption, or if cryptography_policy_exists = FALSE, or if deprecated algorithms (MD5, SHA1, DES) are in use."
+    },
+    {
+      "id": "NIS2-ACC-01",
+      "domain": "Access Control",
+      "requirement": "Access Control Policies Including MFA",
+      "description": "Access control policies including multi-factor authentication and privileged access management must be implemented.",
+      "logic": "FAIL if mfa_enforced = FALSE for any essential or important entity system, or if privileged_access_monitoring = FALSE."
+    },
+    {
+      "id": "NIS2-AWARE-01",
+      "domain": "Human Security",
+      "requirement": "Cybersecurity Awareness and Training for Staff",
+      "description": "Regular cybersecurity awareness training must be provided to all staff including management.",
+      "logic": "FAIL if any employee including management has cybersecurity_training_date older than 12 months, or if training_program_exists = FALSE."
+    },
+    {
+      "id": "NIS2-VULN-01",
+      "domain": "Vulnerability Management",
+      "requirement": "Vulnerability Handling and Disclosure",
+      "description": "Organizations must have vulnerability handling and disclosure policies and conduct regular security assessments.",
+      "logic": "FAIL if vulnerability_disclosure_policy_exists = FALSE, or if last_security_assessment is older than 12 months, or if critical vulnerabilities unpatched > 30 days."
+    }
+  ]
+}

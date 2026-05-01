@@ -1,0 +1,58 @@
+{
+  "standard": "KUWAIT-ISR",
+  "full_name": "Kuwait Central Bank — Information Security Regulation (ISR)",
+  "version": "2016 (updated 2021)",
+  "region": "GCC",
+  "authority": "Central Bank of Kuwait (CBK)",
+  "controls": [
+    {
+      "id": "KW-ISR-GOV-01",
+      "domain": "Governance",
+      "requirement": "Information Security Governance Framework",
+      "description": "Financial institutions must establish a comprehensive information security governance framework with board oversight.",
+      "logic": "FAIL if no board_approved_is_policy exists, or if CISO role is vacant, or if security_governance_framework_reviewed_date older than 12 months."
+    },
+    {
+      "id": "KW-ISR-RISK-01",
+      "domain": "Risk Management",
+      "requirement": "Annual Information Security Risk Assessment",
+      "description": "An annual risk assessment must be conducted covering all information assets and systems.",
+      "logic": "FAIL if risk_assessment_date is older than 12 months or if critical_systems are excluded from assessment scope."
+    },
+    {
+      "id": "KW-ISR-ACC-01",
+      "domain": "Access Control",
+      "requirement": "Strong Authentication for Critical Systems",
+      "description": "Multi-factor authentication must be enforced for access to critical banking and financial systems.",
+      "logic": "FAIL if any user with access to core_banking_system = TRUE has mfa_enabled = FALSE."
+    },
+    {
+      "id": "KW-ISR-ENC-01",
+      "domain": "Cryptography",
+      "requirement": "Encryption of Customer Financial Data",
+      "description": "Customer financial data must be encrypted at rest and in transit using approved cryptographic algorithms.",
+      "logic": "FAIL if any customer_financial_data record has encryption_enabled = FALSE, or if encryption_algorithm IN ('DES','3DES','RC4','MD5')."
+    },
+    {
+      "id": "KW-ISR-INC-01",
+      "domain": "Incident Management",
+      "requirement": "Cyber Incidents Reported to CBK",
+      "description": "Significant cybersecurity incidents must be reported to the Central Bank of Kuwait within prescribed timeframes.",
+      "logic": "FAIL if any major_incident has cbk_notification_sent = FALSE, or if notification_hours > 24 for critical incidents."
+    },
+    {
+      "id": "KW-ISR-DR-01",
+      "domain": "Business Continuity",
+      "requirement": "Disaster Recovery and BCP Tested Annually",
+      "description": "Disaster recovery and business continuity plans must be documented, tested annually, and approved by management.",
+      "logic": "FAIL if drp_test_date older than 12 months, or if bcp_approval_date is NULL, or if last_drp_test_result = 'FAILED'."
+    },
+    {
+      "id": "KW-ISR-VENDOR-01",
+      "domain": "Third-Party Management",
+      "requirement": "Third-Party Security Assessments",
+      "description": "All third parties with access to customer data or critical systems must be security-assessed annually.",
+      "logic": "FAIL if any critical_vendor has no security_assessment in the last 12 months, or if vendor_security_clauses_in_contract = FALSE."
+    }
+  ]
+}

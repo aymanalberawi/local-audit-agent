@@ -1,0 +1,96 @@
+================================================================================
+IMMEDIATE TESTING GUIDE - Try These NOW
+================================================================================
+
+CRITICAL FIX APPLIED:
+✅ File upload authentication fixed (was 401 Unauthorized)
+✅ Token storage key corrected (auth_token → token)
+✅ Docker volume mounted for file path access (/data/)
+✅ Connection edit routing fixed
+✅ Dashboard connection status fixed
+
+================================================================================
+QUICK TEST 1: File Upload (This was broken, now fixed!)
+================================================================================
+
+1. Open http://localhost:3000
+2. Login: admin@example.com / password
+3. Click "Audits" in sidebar
+4. Click "Create Audit" tab
+5. SELECT FILE CONNECTION from dropdown
+   ↓
+   UPLOAD TOGGLE SHOULD APPEAR NOW
+   ↓
+6. Click "Upload File" button
+7. Select C:\local-audit-agent\test_data.csv or any CSV/Excel file
+8. Select an audit standard (e.g., "GDPR-UAE")
+9. Click "Create Audit"
+
+EXPECTED RESULT: ✓ File uploads successfully (no more 401 error!)
+EXPECTED RESULT: ✓ Audit job starts
+EXPECTED RESULT: ✓ Progress shows completion
+EXPECTED RESULT: ✓ Results displayed
+
+================================================================================
+QUICK TEST 2: File Path (Use Container Path)
+================================================================================
+
+1. Same as Test 1, but:
+2. Click "File System Path" instead of "Upload File"
+3. Enter: /data/test_data.csv
+   (NOT C:\local-audit-agent\test_data.csv - use container path!)
+4. Select standard and create audit
+
+EXPECTED RESULT: ✓ File path audit works (container path /data/ mounted)
+
+================================================================================
+QUICK TEST 3: Connection Status Display
+================================================================================
+
+1. Go to Dashboard (home page)
+2. Look at "Data Connections" section
+3. Should show proper status: ✓ Active, ✗ Failed, etc.
+
+EXPECTED RESULT: ✓ Status displays correctly with proper colors
+
+================================================================================
+QUICK TEST 4: No Unexpected Navigation
+================================================================================
+
+1. Go to Connections page
+2. Click "Edit" button
+3. Should show message, NOT navigate to company creation
+
+EXPECTED RESULT: ✓ Error message appears (no more navigation bug)
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+If file upload STILL fails with 401:
+- Clear browser cache: Ctrl+Shift+Delete
+- Clear localStorage: Open DevTools → Application → Storage → Clear All
+- Logout and login again
+- Refresh page with Ctrl+R
+
+If file path audit fails "File not found":
+- Check you're using /data/ path, not Windows path
+- Example correct path: /data/test_data.csv
+- NOT: C:\local-audit-agent\test_data.csv
+
+If connection shows error status on dashboard:
+- Refresh page (Ctrl+R)
+- Delete and recreate the connection
+- Status should update to ACTIVE
+
+================================================================================
+SUCCESS INDICATORS
+================================================================================
+
+You'll know the fixes worked when:
+✓ File upload succeeds (no 401 error)
+✓ File path audit works with /data/ paths
+✓ Connection status displays correctly
+✓ Edit button doesn't navigate away
+
+Try Test 1 now - file upload should work! 🚀

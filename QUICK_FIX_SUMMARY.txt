@@ -1,0 +1,60 @@
+================================================================================
+FILE CONNECTION FIXES - QUICK SUMMARY
+================================================================================
+
+WHAT WAS WRONG:
+1. FILE connections weren't showing the upload toggle in the audit form
+2. FILE connections showed error status on the dashboard
+3. File audit progress tracking wasn't working correctly
+
+ROOT CAUSES & FIXES:
+
+1. ENUM SERIALIZATION BUG
+   File: backend/routers/hierarchy.py
+   Issue: Connection type enum wasn't being converted to string for JSON
+   Fix: Explicitly extract enum value: c.type.value instead of c.type
+   Result: Frontend can now correctly identify FILE connections
+
+2. FILE TESTING BUG
+   File: backend/services/connection_tester.py
+   Issue: FILE connection test failed if file didn't exist
+   Fix: Allow FILE connections without requiring file to exist upfront
+   Result: FILE connections now show ACTIVE status, files provided at audit time
+
+3. PROGRESS TRACKING BUG
+   File: backend/routers/audit.py
+   Issue: File audits use different stages than full audits
+   Fix: Detect file-based audits and show appropriate stages
+   Result: Progress displays correctly (LOADING_FILE instead of CHECKING_CACHE)
+
+================================================================================
+TESTING THE FIX:
+================================================================================
+
+1. Login to http://localhost:3000 with admin@example.com / password
+2. Go to Setup/Onboarding and create a FILE connection
+3. Should show "Connection created successfully!" and ACTIVE status
+4. Go to Audits → Create Audit
+5. Select FILE connection → TOGGLE SHOULD APPEAR
+6. Click "Upload File" → Select test_data.csv
+7. Select audit standard and click "Create Audit"
+8. Monitor progress → should complete successfully
+
+================================================================================
+FILES MODIFIED:
+================================================================================
+
+✓ backend/routers/hierarchy.py (2 sections)
+✓ backend/services/connection_tester.py (1 section)
+✓ backend/routers/audit.py (1 section)
+
+Total: 3 files, ~60 lines of changes
+
+================================================================================
+STATUS: READY FOR TESTING
+================================================================================
+
+Backend is running with all fixes applied.
+All containers are up and healthy.
+Test guide available in: FILE_CONNECTION_TEST_GUIDE.md
+Detailed changes in: FILE_CONNECTION_FIXES_SUMMARY.md

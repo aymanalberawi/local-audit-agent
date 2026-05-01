@@ -1,0 +1,114 @@
+{
+  "standard": "SAMA-CSF",
+  "full_name": "Saudi Central Bank (SAMA) Cybersecurity Framework",
+  "version": "1.0 (2017, updated 2023)",
+  "region": "GCC",
+  "authority": "Saudi Central Bank (SAMA)",
+  "controls": [
+    {
+      "id": "SAMA-GOV-01",
+      "domain": "Cybersecurity Governance & Leadership",
+      "requirement": "Board-Level Cybersecurity Oversight",
+      "description": "The Board of Directors must have oversight of cybersecurity risk and approve the cybersecurity strategy and policy.",
+      "logic": "FAIL if no board_resolution record exists approving a cybersecurity_strategy, or if last_board_review_date is older than 12 months."
+    },
+    {
+      "id": "SAMA-GOV-02",
+      "domain": "Cybersecurity Governance & Leadership",
+      "requirement": "Chief Information Security Officer (CISO) Appointed",
+      "description": "A dedicated CISO or equivalent role must be formally appointed with clear responsibilities and reporting lines.",
+      "logic": "FAIL if no CISO role exists in the HR or roles system, or if the CISO position is vacant (incumbent = NULL)."
+    },
+    {
+      "id": "SAMA-GOV-03",
+      "domain": "Cybersecurity Governance & Leadership",
+      "requirement": "Cybersecurity Policy Approved and Communicated",
+      "description": "A formal cybersecurity policy must exist, be approved by senior management, and be communicated to all relevant personnel.",
+      "logic": "FAIL if cybersecurity_policy record has no approval_date, or if staff_acknowledgement_rate < 90%, or if last_update_date is older than 12 months."
+    },
+    {
+      "id": "SAMA-RISK-01",
+      "domain": "Cybersecurity Risk Management & Compliance",
+      "requirement": "Annual Cybersecurity Risk Assessment",
+      "description": "A formal cybersecurity risk assessment must be conducted at least annually covering all critical financial systems.",
+      "logic": "FAIL if no risk_assessment record exists for the current year, or if assessment_scope excludes critical financial systems."
+    },
+    {
+      "id": "SAMA-RISK-02",
+      "domain": "Cybersecurity Risk Management & Compliance",
+      "requirement": "Risk Treatment Plans Tracked to Closure",
+      "description": "All identified cybersecurity risks with HIGH or CRITICAL rating must have documented treatment plans with owners and deadlines.",
+      "logic": "FAIL if any risk record with rating IN ('HIGH','CRITICAL') has treatment_status = 'OPEN' and target_date is past due."
+    },
+    {
+      "id": "SAMA-RISK-03",
+      "domain": "Cybersecurity Risk Management & Compliance",
+      "requirement": "Compliance with SAMA Regulations Tracked",
+      "description": "The organization must maintain a compliance register tracking adherence to all SAMA cybersecurity regulatory requirements.",
+      "logic": "FAIL if any compliance_item record with regulator = 'SAMA' has compliance_status = 'NON_COMPLIANT' or assessment_date older than 6 months."
+    },
+    {
+      "id": "SAMA-OPS-01",
+      "domain": "Cybersecurity Operations & Technology",
+      "requirement": "Identity and Access Management — Privileged Accounts Controlled",
+      "description": "All privileged accounts must be individually authorized, monitored, and reviewed quarterly.",
+      "logic": "FAIL if any account with privilege_level IN ('ADMIN','SUPERUSER','ROOT') has no authorization_record, or last_review_date is older than 90 days."
+    },
+    {
+      "id": "SAMA-OPS-02",
+      "domain": "Cybersecurity Operations & Technology",
+      "requirement": "Multi-Factor Authentication Enforced for Critical Systems",
+      "description": "MFA must be enforced for access to all critical financial systems and remote access.",
+      "logic": "FAIL if any user with access to critical_system = TRUE has mfa_enabled = FALSE or mfa_method = 'NONE'."
+    },
+    {
+      "id": "SAMA-OPS-03",
+      "domain": "Cybersecurity Operations & Technology",
+      "requirement": "Vulnerability Management Program Active",
+      "description": "Systems must be regularly scanned for vulnerabilities. Critical vulnerabilities must be patched within defined SLAs.",
+      "logic": "FAIL if any system asset has last_vulnerability_scan_date older than 30 days, or if any vulnerability with severity = 'CRITICAL' has patch_status = 'OPEN' older than 15 days."
+    },
+    {
+      "id": "SAMA-OPS-04",
+      "domain": "Cybersecurity Operations & Technology",
+      "requirement": "Security Monitoring and SIEM in Place",
+      "description": "A Security Information and Event Management (SIEM) or equivalent monitoring solution must be active and collecting logs from all critical systems.",
+      "logic": "FAIL if any critical_system has siem_log_source = FALSE or monitoring_enabled = FALSE, or if last_log_received is older than 24 hours."
+    },
+    {
+      "id": "SAMA-OPS-05",
+      "domain": "Cybersecurity Operations & Technology",
+      "requirement": "Incident Response Plan Tested",
+      "description": "A formal cybersecurity incident response plan must exist and be tested at least annually via exercises or simulations.",
+      "logic": "FAIL if no incident_response_plan record exists, or if last_test_date is older than 12 months, or if last_test_result = 'FAILED'."
+    },
+    {
+      "id": "SAMA-OPS-06",
+      "domain": "Cybersecurity Operations & Technology",
+      "requirement": "Security Incidents Reported to SAMA Within Required Timeframe",
+      "description": "Significant cybersecurity incidents affecting financial operations must be reported to SAMA within the required timeframe.",
+      "logic": "FAIL if any incident record with severity IN ('MAJOR','CRITICAL') and regulator_notification_required = TRUE has notification_date more than 24 hours after detection_date."
+    },
+    {
+      "id": "SAMA-OPS-07",
+      "domain": "Cybersecurity Operations & Technology",
+      "requirement": "Encryption of Sensitive Financial Data",
+      "description": "All sensitive financial data (customer data, transaction data) must be encrypted at rest and in transit.",
+      "logic": "FAIL if any financial_data record or transaction_record has encryption_at_rest = FALSE or encryption_in_transit = FALSE."
+    },
+    {
+      "id": "SAMA-TP-01",
+      "domain": "Third-Party Cybersecurity",
+      "requirement": "Third-Party Vendors Assessed for Cybersecurity Risk",
+      "description": "All critical third-party vendors and service providers must be assessed for cybersecurity risk before and during the relationship.",
+      "logic": "FAIL if any vendor record with criticality = 'CRITICAL' or 'HIGH' has no cybersecurity_assessment record, or if last_assessment_date is older than 12 months."
+    },
+    {
+      "id": "SAMA-TP-02",
+      "domain": "Third-Party Cybersecurity",
+      "requirement": "Security Requirements in Third-Party Contracts",
+      "description": "All contracts with third-party service providers that handle financial data must include mandatory cybersecurity requirements clauses.",
+      "logic": "FAIL if any vendor contract with data_access = TRUE has security_clauses_included = FALSE or contract_review_date older than 24 months."
+    }
+  ]
+}

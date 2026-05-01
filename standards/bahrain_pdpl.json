@@ -1,0 +1,51 @@
+{
+  "standard": "BAHRAIN-PDPL",
+  "full_name": "Bahrain Personal Data Protection Law (PDPL) — Law No. 30 of 2018",
+  "version": "2019 (effective)",
+  "region": "GCC",
+  "authority": "Bahrain Personal Data Protection Authority (PDPA)",
+  "controls": [
+    {
+      "id": "BH-PDPL-GOV-01",
+      "domain": "Governance",
+      "requirement": "Data Controller Registration",
+      "description": "Organizations processing personal data must register as a data controller with the Bahrain PDPA.",
+      "logic": "FAIL if no pdpa_registration_number exists in the compliance register, or if registration_status = 'EXPIRED' or 'PENDING'."
+    },
+    {
+      "id": "BH-PDPL-CONSENT-01",
+      "domain": "Consent",
+      "requirement": "Explicit Consent Before Processing Sensitive Data",
+      "description": "Explicit, written consent must be obtained from data subjects before processing sensitive personal data (health, religion, biometrics).",
+      "logic": "FAIL if any sensitive_personal_data record has consent_type != 'EXPLICIT' or consent_obtained = FALSE."
+    },
+    {
+      "id": "BH-PDPL-RIGHTS-01",
+      "domain": "Data Subject Rights",
+      "requirement": "Access Requests Fulfilled Within 30 Days",
+      "description": "Data subjects have the right to access their personal data and must receive a response within 30 days.",
+      "logic": "FAIL if any dsar_record has response_date - request_date > 30, or if response_date = NULL for requests older than 30 days."
+    },
+    {
+      "id": "BH-PDPL-SEC-01",
+      "domain": "Security",
+      "requirement": "Appropriate Technical and Organizational Measures",
+      "description": "Data controllers must implement appropriate technical and organizational security measures to protect personal data.",
+      "logic": "FAIL if any personal_data table has encryption_enabled = FALSE, or if access_control_policy_documented = FALSE."
+    },
+    {
+      "id": "BH-PDPL-TRANS-01",
+      "domain": "Cross-Border Transfers",
+      "requirement": "Cross-Border Transfers Only to Adequate Countries or with Safeguards",
+      "description": "Personal data may only be transferred outside Bahrain to countries with adequate protection or with appropriate safeguards.",
+      "logic": "FAIL if any data_transfer has destination_country NOT IN bahrain_adequate_countries AND transfer_mechanism = NULL."
+    },
+    {
+      "id": "BH-PDPL-BREACH-01",
+      "domain": "Breach Notification",
+      "requirement": "Breach Notification to PDPA",
+      "description": "The PDPA must be notified of any personal data breach that may harm data subjects.",
+      "logic": "FAIL if any data_breach with harm_risk = TRUE has pdpa_notification_sent = FALSE, or if notification_date is more than 72 hours after detection."
+    }
+  ]
+}

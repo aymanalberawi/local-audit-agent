@@ -1,0 +1,142 @@
+{
+  "standard": "PCI-DSS",
+  "full_name": "Payment Card Industry Data Security Standard v4.0",
+  "version": "4.0 (mandatory from April 2024)",
+  "region": "US / GLOBAL",
+  "authority": "PCI Security Standards Council (PCI SSC)",
+  "controls": [
+    {
+      "id": "PCI-REQ1-01",
+      "domain": "Requirement 1: Network Security Controls",
+      "requirement": "Network Security Controls Installed and Maintained",
+      "description": "Firewalls and other network security controls must restrict traffic between untrusted networks and the cardholder data environment (CDE).",
+      "logic": "FAIL if any network_device in the CDE has firewall_enabled = FALSE, or if any inbound rule allows unrestricted access from external networks to CDE systems."
+    },
+    {
+      "id": "PCI-REQ2-01",
+      "domain": "Requirement 2: Secure Configurations",
+      "requirement": "Vendor Default Credentials Changed",
+      "description": "All vendor-supplied default passwords and other default security parameters must be changed before deploying system components.",
+      "logic": "FAIL if any system_component record has default_credentials_changed = FALSE or last_password_change = NULL for service accounts."
+    },
+    {
+      "id": "PCI-REQ2-02",
+      "domain": "Requirement 2: Secure Configurations",
+      "requirement": "Unnecessary Services and Ports Disabled",
+      "description": "All unnecessary services, protocols, daemons, and functions must be disabled.",
+      "logic": "FAIL if any CDE system has unnecessary_services_disabled = FALSE, or if open_ports_count exceeds approved_ports_list count."
+    },
+    {
+      "id": "PCI-REQ3-01",
+      "domain": "Requirement 3: Protect Stored Account Data",
+      "requirement": "Primary Account Numbers (PANs) Masked or Encrypted",
+      "description": "Primary Account Numbers (PANs) must not be stored unless necessary, and if stored must be rendered unreadable through strong encryption or truncation.",
+      "logic": "FAIL if any transaction record stores full_pan in plaintext, or if pan_encryption_method = 'NONE' or pan_storage_justified = FALSE."
+    },
+    {
+      "id": "PCI-REQ3-02",
+      "domain": "Requirement 3: Protect Stored Account Data",
+      "requirement": "Sensitive Authentication Data Not Stored After Authorization",
+      "description": "Sensitive authentication data (CVV, PIN, track data) must not be stored after authorization.",
+      "logic": "FAIL if any transaction_data record has cvv_stored = TRUE, pin_stored = TRUE, or track_data_stored = TRUE."
+    },
+    {
+      "id": "PCI-REQ3-03",
+      "domain": "Requirement 3: Protect Stored Account Data",
+      "requirement": "Data Retention and Disposal Policy Enforced",
+      "description": "Card data must only be retained as long as required by business or legal needs, and disposal must be secure.",
+      "logic": "FAIL if any cardholder_data record has created_date older than retention_policy_days and deletion_status != 'SECURELY_DISPOSED'."
+    },
+    {
+      "id": "PCI-REQ4-01",
+      "domain": "Requirement 4: Encryption in Transit",
+      "requirement": "Strong Cryptography Used for Cardholder Data Transmission",
+      "description": "Strong cryptographic protocols (TLS 1.2+) must be used when transmitting cardholder data over open, public networks.",
+      "logic": "FAIL if any payment_transmission record uses protocol IN ('HTTP','TLS1.0','TLS1.1','SSL'), or if encryption_in_transit = FALSE."
+    },
+    {
+      "id": "PCI-REQ5-01",
+      "domain": "Requirement 5: Anti-Malware",
+      "requirement": "Anti-Malware Installed and Active on All Systems",
+      "description": "Anti-malware solutions must be deployed on all system components and kept current.",
+      "logic": "FAIL if any CDE system has antimalware_installed = FALSE, or if antimalware_definitions_date is older than 7 days."
+    },
+    {
+      "id": "PCI-REQ6-01",
+      "domain": "Requirement 6: Secure Software Development",
+      "requirement": "Security Patches Applied Timely",
+      "description": "Critical security patches must be installed within one month of release. High-risk patches within 3 months.",
+      "logic": "FAIL if any critical_patch has patch_release_date older than 30 days and patch_applied = FALSE, or if high_risk_patch older than 90 days is unapplied."
+    },
+    {
+      "id": "PCI-REQ7-01",
+      "domain": "Requirement 7: Access Control — Need to Know",
+      "requirement": "Access to Cardholder Data Restricted by Business Need",
+      "description": "Access to system components and cardholder data must be limited to only those individuals whose job requires it.",
+      "logic": "FAIL if any user has access to cardholder_data but business_justification = NULL or role_requires_access = FALSE."
+    },
+    {
+      "id": "PCI-REQ8-01",
+      "domain": "Requirement 8: User Authentication",
+      "requirement": "Unique User IDs for All System Access",
+      "description": "Every user must be assigned a unique ID before allowing access to system components or cardholder data.",
+      "logic": "FAIL if any user account is a shared_account = TRUE accessing CDE systems, or if username is a generic/shared name."
+    },
+    {
+      "id": "PCI-REQ8-02",
+      "domain": "Requirement 8: User Authentication",
+      "requirement": "Multi-Factor Authentication Required",
+      "description": "MFA must be implemented for all access to the CDE and for all remote network access.",
+      "logic": "FAIL if any user with cde_access = TRUE or remote_access = TRUE has mfa_enabled = FALSE."
+    },
+    {
+      "id": "PCI-REQ8-03",
+      "domain": "Requirement 8: User Authentication",
+      "requirement": "Password Complexity and Rotation Enforced",
+      "description": "User passwords must meet minimum complexity requirements and be changed at least every 90 days.",
+      "logic": "FAIL if password_complexity_enforced = FALSE, or if any user has password_last_changed older than 90 days."
+    },
+    {
+      "id": "PCI-REQ10-01",
+      "domain": "Requirement 10: Logging and Monitoring",
+      "requirement": "Audit Logs Created for All Access to CDE",
+      "description": "Audit logs capturing user activities, exceptions, and security events in the CDE must be generated and retained.",
+      "logic": "FAIL if any CDE system has audit_logging_enabled = FALSE, or if log_retention_days < 90, or if logs are modifiable without detection."
+    },
+    {
+      "id": "PCI-REQ10-02",
+      "domain": "Requirement 10: Logging and Monitoring",
+      "requirement": "Logs Reviewed Daily",
+      "description": "Logs for all system components must be reviewed at least daily to identify anomalies and suspicious activity.",
+      "logic": "FAIL if log_review_last_date is older than 1 day, or if automated_log_review_enabled = FALSE and no manual_review_evidence exists."
+    },
+    {
+      "id": "PCI-REQ11-01",
+      "domain": "Requirement 11: Security Testing",
+      "requirement": "Vulnerability Scans Conducted Quarterly",
+      "description": "Internal and external vulnerability scans of the CDE must be conducted at least quarterly.",
+      "logic": "FAIL if last_internal_scan_date or last_external_scan_date is older than 90 days, or if last_scan_result has unresolved HIGH/CRITICAL findings."
+    },
+    {
+      "id": "PCI-REQ11-02",
+      "domain": "Requirement 11: Security Testing",
+      "requirement": "Penetration Testing Conducted Annually",
+      "description": "Penetration tests of the CDE must be conducted at least annually and after any significant infrastructure or application changes.",
+      "logic": "FAIL if penetration_test_date is older than 12 months, or if pentest_findings_remediated = FALSE for any HIGH/CRITICAL finding."
+    },
+    {
+      "id": "PCI-REQ12-01",
+      "domain": "Requirement 12: Security Policy",
+      "requirement": "Information Security Policy Maintained",
+      "description": "A comprehensive information security policy must be established, published, maintained, and disseminated to all relevant personnel.",
+      "logic": "FAIL if no information_security_policy exists, or if policy_last_reviewed is older than 12 months, or if staff_acknowledgement_rate < 95%."
+    },
+    {
+      "id": "PCI-REQ12-02",
+      "domain": "Requirement 12: Security Policy",
+      "requirement": "Third-Party Service Providers Managed",
+      "description": "Third-party service providers with access to cardholder data must be managed with security requirements in contracts and annual assessments.",
+      "logic": "FAIL if any tpsp record with cde_access = TRUE has no security_assessment in the last 12 months, or if compliance_acknowledgement_signed = FALSE."
+    }
+  ]
+}

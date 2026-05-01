@@ -1,0 +1,6 @@
+employee_id,name,department,role,email,access_level
+101,Ayman Alberawi,IT,Admin,ayman@stratologies.com,Superuser
+102,John Doe,Marketing,User,j.doe@company.com,Standard
+103,Jane Smith,Marketing,Admin,jane.s@company.com,High
+104,Naya Muneer,Finance,User,naya@company.com,Standard
+105,Luna Ahmad,HR,User,SECRET_ID_9921,Standard
